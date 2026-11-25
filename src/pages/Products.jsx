@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getProducts, deleteProduct, categories } from "../services/api.js";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [searchParams] = useSearchParams();
+  const requestedCategory = searchParams.get("category");
+  const [category, setCategory] = useState(
+    categories.includes(requestedCategory) ? requestedCategory : "All"
+  );
+  const lowStockOnly = searchParams.get("filter") === "low-stock";
 
   useEffect(() => {
     setProducts(getProducts());
@@ -20,13 +25,25 @@ function Products() {
 
   const filtered = products.filter((p) => {
     const nameOk = p.name.toLowerCase().includes(search.toLowerCase());
-    const catOk = category == "All" || p.category == category;
-    return nameOk && catOk;
+    const categoryOk = category === "All" || p.category === category;
+    const stockOk = !lowStockOnly || Number(p.stock) < 5;
+    return nameOk && categoryOk && stockOk;
   });
 
   return (
     <div>
-      <h1>Products</h1>
+      <div className="products-heading">
+        <div>
+          <p className="eyebrow">CATALOG</p>
+          <h1>Products</h1>
+        </div>
+        <Link className="btn" to="/add-product">+ Add product</Link>
+      </div>
+      {lowStockOnly && (
+        <p className="filter-notice">
+          Showing low-stock products <Link to="/products">Clear filter</Link>
+        </p>
+      )}
 
       <div className="top">
         <input
@@ -41,7 +58,6 @@ function Products() {
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
-        <Link className="btn" to="/add-product">Add Product</Link>
       </div>
 
       <table>

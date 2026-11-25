@@ -41,8 +41,6 @@ function Login() {
 
         <p className="error">{error}</p>
         <button className="btn" type="submit">Login</button>
-
-        <p className="note">email: admin@gmail.com, password: 123456</p>
       </form>
     </div>
   );

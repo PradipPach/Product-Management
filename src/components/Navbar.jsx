@@ -13,8 +13,18 @@ function Navbar() {
 
   return (
     <div className="navbar">
-      <h2>Product Management</h2>
-      <button className="btn" onClick={handleLogout}>Logout</button>
+      <div className="brand">
+        <span className="brand-mark" aria-hidden="true">P</span>
+        <div>
+          <strong>Stockroom</strong>
+          <span>PRODUCT MANAGEMENT</span>
+        </div>
+      </div>
+      <div className="navbar-actions">
+        <span className="user-avatar" aria-hidden="true">A</span>
+        <span className="user-name">Admin</span>
+        <button className="logout-button" onClick={handleLogout}>Log out</button>
+      </div>
     </div>
   );
 }
